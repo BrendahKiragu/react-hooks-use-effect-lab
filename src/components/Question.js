@@ -3,19 +3,26 @@ import React, { useEffect, useState } from "react";
 function Question({ question, onAnswered }) {
   const [timeRemaining, setTimeRemaining] = useState(10);
 
-  // add useEffect code
- useEffect(()=>{
-  const timer = setTimeout(()=>{
-    setTimeRemaining(prevTime=> (prevTime - 1))
-  }, 1000)
+  // useEffect  to manage countdown timer
+  //Triggers onAnswered(false) when time limit is reached
+ //initiate useEffect
+  useEffect(()=>{
+    if(timeRemaining===0){
+      setTimeRemaining(10)
+      onAnswered(false)
+    } 
 
-  if(timeRemaining === 0){
-    setTimeRemaining(10)
-    onAnswered(false)
-  }
-  return ()=>clearTimeout(timer)
- }, [timeRemaining, onAnswered])
-
+    //return setTimeout that decreases the seconds by 1
+   const timerId = setTimeout(()=>{
+      setTimeRemaining((timeRemaining)=>timeRemaining - 1)
+    }, "1000")
+     
+ 
+    return function cleanup(){
+     clearTimeout(timerId) 
+    }
+   
+  }, [timeRemaining, onAnswered])
 
   function handleAnswer(isCorrect) {
     setTimeRemaining(10);
